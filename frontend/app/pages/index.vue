@@ -32,7 +32,7 @@ import {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
+          <!-- <TableRow>  ANTES XD
             <TableCell class="font-medium">
               <h1 v-for="usuario in usuarios">{{ usuario.id }}</h1>
             </TableCell>
@@ -45,7 +45,14 @@ import {
             <TableCell>
               <h1 v-for="usuario in usuarios">{{ usuario.email }}</h1>
             </TableCell>
-          </TableRow>
+          </TableRow> -->
+        <TableRow v-for="usuario in usuarios" :key="usuario.id">
+          <TableCell> {{usuario.id}} </TableCell>
+          <TableCell> {{usuario.nombre}} </TableCell>
+          <TableCell> {{usuario.edad}} </TableCell>
+          <TableCell> {{usuario.email}} </TableCell>
+        </TableRow>
+        
         </TableBody>
       </Table>
       <div style="display: flex; justify-content: center; margin-top: 20px">
