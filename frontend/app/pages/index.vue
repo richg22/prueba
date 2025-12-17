@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const { data: usuarios, execute } = await useFetch<User[]>(
-  "http://localhost:8000/api/usuarios/"
-);
+  "http://localhost:8000/api/usuarios/");
 
 import {
   Table,
@@ -14,6 +13,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 </script>
+
+
 
 <template>
   <div>
