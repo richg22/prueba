@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'cruds',
     'rest_framework',
     'theme',
-     'corsheaders',
+    'corsheaders',
     'django_celery_results',
+    'nuevapp'   
 ]
 
 TAILWIND_APP_NAME = "theme"
@@ -128,4 +129,5 @@ STATIC_URL = 'static/'
 CORS_ALLOW_ALL_ORIGINS = True
 
 # CELERY SETTINGS
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'

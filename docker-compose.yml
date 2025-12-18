@@ -25,6 +25,7 @@ services:
     build:
       context: ./pruebatec
       dockerfile: DockerFile
+    command: celery -A pruebatec worker -l info
     volumes:
       - ./pruebatec:/usr/src/app
     environment:
