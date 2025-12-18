@@ -15,3 +15,15 @@ class Usuario(models.Model):
     
     class Meta:
         db_table = 'cruds_usuario'
+
+class Usuariopending(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=50, default="")
+    edad = models.IntegerField(default=0)
+    email = models.CharField(max_length=100,default="")
+    token = models.CharField(max_length=100, default="")
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        db_table = 'Usuariopending'

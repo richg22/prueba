@@ -28,6 +28,8 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import { Route, Router } from "lucide-vue-next";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -91,14 +93,6 @@ const onSubmit = handleSubmit((data) => {
   );
 });
 
-
-function enviarCorreo(){
-  useFetch("http://localhost:8000/enviarcorreo",{
-    method: 'GET'
-  });
-}
-
-
 //https://www.shadcn-vue.com/docs/forms/vee-validate
 </script>
 
@@ -109,7 +103,9 @@ function enviarCorreo(){
     style="background-image: url('/background.png')"
   >
     <div class="flex justify-center">
-      <h1 class="font-bold text-5xl text-blue-950 mt-20">Pagina principal ❤</h1>
+      <h1 class="font-bold text-5xl text-blue-950 mt-20">
+        Crea tu nueva contraseña
+      </h1>
     </div>
 
     <!-- FORMULARIO -->
@@ -118,23 +114,24 @@ function enviarCorreo(){
       <!-- <form @submit="onSubmit"> -->
       <Card class="w-full sm:max-w-md">
         <CardHeader>
-          <CardTitle> Formulario de registro </CardTitle>
+          <CardTitle> Hola {NOMBRE} </CardTitle>
           <CardDescription>
-            Regitrate para el concurso de san valentin
+            Crea tu contraseña para finalizar con el registro
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           <form id="form-vee-demo" @submit="onSubmit">
             <FieldGroup>
               <VeeField v-slot="{ field, errors }" name="nombre">
                 <Field :data-invalid="!!errors.length">
                   <FieldLabel for="form-vee-demo-title">
-                    Nombre Completo
+                    Contraseña
                   </FieldLabel>
                   <Input
                     id="form-vee-demo-title"
                     v-bind="field"
-                    placeholder="Ingresa tu nombre "
+                    placeholder="Ingresa tu contraseña "
                     autocomplete="off"
                     :aria-invalid="!!errors.length"
                   />
@@ -142,42 +139,18 @@ function enviarCorreo(){
                 </Field>
               </VeeField>
 
-              <VeeField v-slot="{ field, errors }" name="edad">
+              <VeeField v-slot="{ field, errors }" name="nombre">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="form-vee-demo-title"> Edad </FieldLabel>
-                  <Input
-                    id="form-vee-demo-title"
-                    type="number"
-                    v-bind="field"
-                    placeholder="Ingresa tu edad "
-                    autocomplete="off"
-                    :aria-invalid="!!errors.length"
-                  />
-                  <FieldError v-if="errors.length" :errors="errors" />
-                </Field>
-              </VeeField>
-
-              <VeeField v-slot="{ field, errors }" name="email">
-                <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="form-vee-demo-title"> Correo </FieldLabel>
+                  <FieldLabel for="form-vee-demo-title">
+                    Repite Contraseña
+                  </FieldLabel>
                   <Input
                     id="form-vee-demo-title"
                     v-bind="field"
-                    type="email"
-                    placeholder="Ingresa tu correo"
+                    placeholder="Ingresa tu contraseña "
                     autocomplete="off"
                     :aria-invalid="!!errors.length"
                   />
-                  <FieldError v-if="errors.length" :errors="errors" />
-                </Field>
-              </VeeField>
-
-              <VeeField v-slot="{ field, errors }" name="description">
-                <Field :data-invalid="!!errors.length">
-                  <FieldDescription>
-                    Para crear una contraseña y registrarte debes verificar tu
-                    correo
-                  </FieldDescription>
                   <FieldError v-if="errors.length" :errors="errors" />
                 </Field>
               </VeeField>
@@ -191,37 +164,30 @@ function enviarCorreo(){
               <Button type="button" variant="outline" @click="resetForm">
                 Borrar campos
               </Button>
-              <Button type="submit" form="form-vee-demo"> Submit </Button>
-              <Button
-                type="button"
-                form="form-vee-demo"
-                @click="$router.push('verify')"
-              >
-                Verificar Correo
-              </Button>
 
-              <!--  -->
-
-               <AlertDialog>
+              <!-- alert -->
+              <AlertDialog>
                 <AlertDialogTrigger as-child>
-                  <Button @click=enviarCorreo()> Enviar correo </Button>
+                  <Button> Show Dialog </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle
-                      >Verificación de correo!</AlertDialogTitle
+                      >Are you absolutely sure?</AlertDialogTitle
                     >
                     <AlertDialogDescription>
-                     Hemos enviado un correo para que puedas crear tu contraseña y resgistrarte
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction>Continue</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
 
-              <!--  -->
+              <!--end alert  -->
             </Field>
           </CardFooter>
         </div>
@@ -231,4 +197,5 @@ function enviarCorreo(){
 
     <!-- END FORMULARIO -->
   </div>
+  <!-- END DIV DE FONDO DE PANTALLA -->
 </template>
