@@ -1,15 +1,16 @@
-from django.shortcuts import render
-from cruds.utils import handlesendemail
-from nuevapp.tasks import test
 from django.http import HttpResponse
+from django.shortcuts import render
+from nuevapp.tasks import send_async_email
+
 
 # Create your views here.
 def home(request):
-    return render(request, 'index.html')
+    return render(request, "index.html")
+
 
 def send_example_email(request):
-    try:        
-        test.delay()
-        return HttpResponse('Email sent successfully!')
+    try:
+        send_async_email.delay()
+        return HttpResponse("Email sent successfully!")
     except Exception as e:
-        return HttpResponse(f'Failed to send email: {str(e)}')
+        return HttpResponse(f"Failed to send email: {str(e)}")
