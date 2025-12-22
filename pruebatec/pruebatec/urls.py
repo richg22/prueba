@@ -22,5 +22,6 @@ from cruds import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("cruds.urls")),
+    path("usuariospending", include("cruds.urls")),
     path("enviarcorreo", views.send_example_email, name="enviarcorreo"),
 ]

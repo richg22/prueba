@@ -5,10 +5,11 @@ from .models import Usuario, Usuariopending
 class UsuarioSerializers(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ("id", "nombre", "edad", "email")
+        # fields = ("id", "nombre", "edad", "email", "password")
+        fields = "__all__"
 
 
-class UsuariopendingSerializers(serializers.ModelSerializer):
+class UsuarioPendingSerializers(serializers.ModelSerializer):
     class Meta:
         model = Usuariopending
         fields = ("id", "nombre", "edad", "email")

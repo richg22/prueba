@@ -82,8 +82,8 @@ const onSubmit = handleSubmit((data) => {
       "--border-radius": "calc(var(--radius)  + 4px)",
     },
   });
-  const { data: usuarios } = useFetch<User[]>(
-    "http://localhost:8000/api/usuarios/",
+  const { data: usuarios } = useFetch<UserPending>(
+    "http://localhost:8000/api/usuariospending/",
     {
       method: "POST",
       body: { nombre: data.nombre, edad: data.edad, email: data.email },
@@ -91,13 +91,11 @@ const onSubmit = handleSubmit((data) => {
   );
 });
 
-
-function enviarCorreo(){
-  useFetch("http://localhost:8000/enviarcorreo",{
-    method: 'GET'
+function enviarCorreo() {
+  useFetch("http://localhost:8000/enviarcorreo", {
+    method: "GET",
   });
 }
-
 
 //https://www.shadcn-vue.com/docs/forms/vee-validate
 </script>
@@ -191,28 +189,21 @@ function enviarCorreo(){
               <Button type="button" variant="outline" @click="resetForm">
                 Borrar campos
               </Button>
-              <Button type="submit" form="form-vee-demo"> Submit </Button>
-              <Button
-                type="button"
-                form="form-vee-demo"
-                @click="$router.push('verify')"
-              >
-                Verificar Correo
-              </Button>
 
               <!--  -->
 
-               <AlertDialog>
+              <AlertDialog>
                 <AlertDialogTrigger as-child>
-                  <Button @click=enviarCorreo()> Enviar correo </Button>
+                  <Button type="submit" form="form-vee-demo">
+                    Enviar correo de verificacion
+                  </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle
-                      >Verificación de correo!</AlertDialogTitle
-                    >
+                    <AlertDialogTitle>Verificación de correo!</AlertDialogTitle>
                     <AlertDialogDescription>
-                     Hemos enviado un correo para que puedas crear tu contraseña y resgistrarte
+                      Hemos enviado un correo para que puedas crear tu
+                      contraseña y resgistrarte
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

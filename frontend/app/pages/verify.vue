@@ -27,7 +27,7 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group";
-import { Route, Router } from "lucide-vue-next";
+import { Database, Route, Router } from "lucide-vue-next";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import {
@@ -43,32 +43,51 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const formSchema = toTypedSchema(
-  z.object({
-    nombre: z
-      .string()
-      .min(10, "Nombre debe tener minimo 10 caracteres")
-      .max(100, "Nombre debe tener maximo 100 caracteres."),
-    edad: z
-      .number()
-      .gt(0, "Ingrese una edad validad")
-      .lte(99, "Ingese una edad validad"),
-    email: z
-      .string()
-      .min(10, "Correo debe tener minimo 10 caracteres")
-      .max(100, "Corre debe tener maximo 100 caracteres"),
-  })
+  z
+    .object({
+      password: z
+        .string()
+        .min(6, "Contraseña debe tener minimo 6 caracteres")
+        .max(50, "Contraseña debe tener maximo 50 caracteres"),
+      passwordConfirm: z
+        .string()
+        .min(6, "Contraseña debe tener minimo 6 caracteres")
+        .max(50, "Contraseña debe tener maximo 50 caracteres"),
+    })
+    .refine((data) => data.password === data.passwordConfirm, {
+      message: "Las contraseñas no coinciden",
+      path: ["passwordConfirm"],
+    })
 );
 
 const { handleSubmit, resetForm } = useForm({
   validationSchema: formSchema,
   initialValues: {
-    nombre: "",
-    edad: 0,
-    email: "",
+    password: "",
+    passwordConfirm: "",
   },
 });
 
-const onSubmit = handleSubmit((data) => {
+const route = useRoute();
+const id = computed(() => {
+  const rawId = route.query.id;
+  return Array.isArray(rawId) ? rawId[0] : rawId;
+});
+
+const { data: usuariospending } = await useFetch<UserPending>(
+  () => `http://localhost:8000/api/usuariospending/${id.value}/`,
+  {
+    immediate: !!id.value,
+  }
+);
+
+const pendingUsuario = computed(() => ({
+  nombre: usuariospending.value?.nombre ?? "",
+  email: usuariospending.value?.email ?? "",
+  edad: usuariospending.value?.edad ?? 0,
+}));
+
+const onSubmit = handleSubmit(async (data) => {
   toast("You submitted the following values:", {
     description: h(
       "pre",
@@ -84,11 +103,26 @@ const onSubmit = handleSubmit((data) => {
       "--border-radius": "calc(var(--radius)  + 4px)",
     },
   });
-  const { data: usuarios } = useFetch<User[]>(
+  // await $fetch("http://localhost:8000/api/usuarios/", {
+  //   method: "POST",
+  //   body: {
+  //     nombre: pendingUsuario.value.nombre,
+  //     edad: pendingUsuario.value.edad,
+  //     email: pendingUsuario.value.email,
+  //     password: data.password,
+  //   },
+  // });
+
+  const { data: usuarios } = useFetch<User>(
     "http://localhost:8000/api/usuarios/",
     {
       method: "POST",
-      body: { nombre: data.nombre, edad: data.edad, email: data.email },
+      body: {
+        nombre: pendingUsuario.value.nombre,
+        edad: pendingUsuario.value.edad,
+        email: pendingUsuario.value.email,
+        password: data.password,
+      },
     }
   );
 });
@@ -107,14 +141,14 @@ const onSubmit = handleSubmit((data) => {
         Crea tu nueva contraseña
       </h1>
     </div>
-
     <!-- FORMULARIO -->
 
     <div class="flex justify-center mt-20">
       <!-- <form @submit="onSubmit"> -->
       <Card class="w-full sm:max-w-md">
         <CardHeader>
-          <CardTitle> Hola {NOMBRE} </CardTitle>
+          <CardTitle> Hola {{ usuariospending?.nombre }} </CardTitle>
+
           <CardDescription>
             Crea tu contraseña para finalizar con el registro
           </CardDescription>
@@ -123,7 +157,7 @@ const onSubmit = handleSubmit((data) => {
         <CardContent>
           <form id="form-vee-demo" @submit="onSubmit">
             <FieldGroup>
-              <VeeField v-slot="{ field, errors }" name="nombre">
+              <VeeField v-slot="{ field, errors }" name="password">
                 <Field :data-invalid="!!errors.length">
                   <FieldLabel for="form-vee-demo-title">
                     Contraseña
@@ -139,7 +173,7 @@ const onSubmit = handleSubmit((data) => {
                 </Field>
               </VeeField>
 
-              <VeeField v-slot="{ field, errors }" name="nombre">
+              <VeeField v-slot="{ field, errors }" name="passwordConfirm">
                 <Field :data-invalid="!!errors.length">
                   <FieldLabel for="form-vee-demo-title">
                     Repite Contraseña
@@ -168,7 +202,9 @@ const onSubmit = handleSubmit((data) => {
               <!-- alert -->
               <AlertDialog>
                 <AlertDialogTrigger as-child>
-                  <Button> Show Dialog </Button>
+                  <Button type="submit" form="form-vee-demo">
+                    Registrarse
+                  </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>

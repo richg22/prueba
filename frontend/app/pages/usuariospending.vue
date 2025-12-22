@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const { data: usuarios, execute } = await useFetch<User[]>(
-  "http://localhost:8000/api/usuarios/"
+const { data: usuarios, execute } = await useFetch<UserPending[]>(
+  "http://localhost:8000/api/usuariospending/"
 );
 
 import {
@@ -29,7 +29,6 @@ import {
             <TableHead>NOMBRE</TableHead>
             <TableHead>EDAD</TableHead>
             <TableHead class="text-left"> CORREO </TableHead>
-            <TableHead> PASSWORD </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -52,7 +51,6 @@ import {
             <TableCell> {{ usuario.nombre }} </TableCell>
             <TableCell> {{ usuario.edad }} </TableCell>
             <TableCell> {{ usuario.email }} </TableCell>
-            <TableCell> {{ usuario.password }} </TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -75,19 +73,6 @@ import {
             >
           </NuxtLink>
         </div>
-
-        <div style="margin-left: 10px">
-          <NuxtLink to="sorteo">
-            <Button
-              variant="destructive"
-              size="lg"
-              class="shadow"
-              @click="execute"
-              >Seleccionar ganador</Button
-            >
-          </NuxtLink>
-        </div>
-
         <div></div>
       </div>
     </div>
