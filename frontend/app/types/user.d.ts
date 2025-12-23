@@ -3,7 +3,6 @@ interface User {
   nombre: string;
   edad: number;
   email: string;
-  password: string;
 }
 
 interface UserPending {

@@ -118,7 +118,7 @@ function enviarCorreo() {
         <CardHeader>
           <CardTitle> Formulario de registro </CardTitle>
           <CardDescription>
-            Regitrate para el concurso de san valentin
+            Registrate para el concurso de san valentin
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -195,7 +195,7 @@ function enviarCorreo() {
               <AlertDialog>
                 <AlertDialogTrigger as-child>
                   <Button type="submit" form="form-vee-demo">
-                    Enviar correo de verificacion
+                    Enviar correo de verificación
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>

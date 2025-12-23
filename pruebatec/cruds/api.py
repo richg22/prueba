@@ -4,12 +4,15 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import UsuarioSerializers, UsuarioPendingSerializers
 from nuevapp.tasks import send_async_email, send_winner_email
+from rest_framework.permissions import IsAuthenticated
 
 
 class UsuarioViewSet(viewsets.ModelViewSet):
+
     queryset = Usuario.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UsuarioSerializers
+    # permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

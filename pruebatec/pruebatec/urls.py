@@ -19,9 +19,13 @@ from django.contrib import admin
 from django.urls import path, include
 from cruds import views
 
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("cruds.urls")),
     path("usuariospending", include("cruds.urls")),
     path("enviarcorreo", views.send_example_email, name="enviarcorreo"),
+    #     path("api/auth/token/", TokenObtainPairView.as_view()),
+    #     path("api/auth/token/refresh/", TokenRefreshView.as_view()),
 ]

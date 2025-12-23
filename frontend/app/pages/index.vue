@@ -1,95 +1,145 @@
 <script setup lang="ts">
-const { data: usuarios, execute } = await useFetch<User[]>(
-  "http://localhost:8000/api/usuarios/"
+import * as z from "zod";
+import { toTypedSchema } from "@vee-validate/zod";
+import { useForm, Field as VeeField } from "vee-validate";
+import { toast } from "vue-sonner";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+
+const formSchema = toTypedSchema(
+  z.object({
+    password: z
+      .string()
+      .min(5, "Ingrese contraseña valida")
+      .max(20, "Ingrese contraseña valida"),
+    email: z
+      .string()
+      .min(10, "Correo debe tener minimo 10 caracteres")
+      .max(100, "Corre debe tener maximo 100 caracteres"),
+  })
 );
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+const { handleSubmit, resetForm } = useForm({
+  validationSchema: formSchema,
+  initialValues: {
+    password: "",
+    email: "",
+  },
+});
+
+const onSubmit = handleSubmit((data) => {
+  toast("You submitted the following values:", {
+    description: h(
+      "pre",
+      {
+        class:
+          "bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4",
+      },
+      h("code", JSON.stringify(data, null, 2))
+    ),
+    position: "bottom-right",
+    class: "flex flex-col gap-2",
+    style: {
+      "--border-radius": "calc(var(--radius)  + 4px)",
+    },
+  });
+
+  const { data: usuarios } = useFetch<UserPending>(
+    "http://localhost:8000/api/auth/token",
+    {
+      method: "POST",
+      body: { email: data.email, password: data.password },
+    }
+  );
+});
+
+//https://www.shadcn-vue.com/docs/forms/vee-validate
 </script>
 
 <template>
-  <div>
-    <div style="justify-content: center; display: flex">
-      <h1 class="font-bold text-5xl text-blue-950">Lista de usuarios</h1>
+  <!-- <NuxtImg src="/background.png" alt="image" width="1920" height="1080" /> -->
+  <div
+    class="min-h-screen bg-cover bg-center bg-no-repeat"
+    style="background-image: url('/background.png')"
+  >
+    <div class="flex justify-center">
+      <h1 class="font-bold text-5xl text-blue-950 mt-20">LOGIN</h1>
     </div>
-    <div style="padding: 20px; align-items: center">
-      <Table>
-        <TableCaption>Lista de usuarios</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead class="w-[100px]">ID</TableHead>
-            <TableHead>NOMBRE</TableHead>
-            <TableHead>EDAD</TableHead>
-            <TableHead class="text-left"> CORREO </TableHead>
-            <TableHead> PASSWORD </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <!-- <TableRow>  ANTES XD
-            <TableCell class="font-medium">
-              <h1 v-for="usuario in usuarios">{{ usuario.id }}</h1>
-            </TableCell>
-            <TableCell>
-              <h1 v-for="usuario in usuarios">{{ usuario.nombre }}</h1>
-            </TableCell>
-            <TableCell>
-              <h1 v-for="usuario in usuarios">{{ usuario.edad }}</h1>
-            </TableCell>
-            <TableCell>
-              <h1 v-for="usuario in usuarios">{{ usuario.email }}</h1>
-            </TableCell>
-          </TableRow> -->
-          <TableRow v-for="usuario in usuarios" :key="usuario.id">
-            <TableCell> {{ usuario.id }} </TableCell>
-            <TableCell> {{ usuario.nombre }} </TableCell>
-            <TableCell> {{ usuario.edad }} </TableCell>
-            <TableCell> {{ usuario.email }} </TableCell>
-            <TableCell> {{ usuario.password }} </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      <div style="display: flex; justify-content: center; margin-top: 20px">
-        <div style="margin-right: 10px">
-          <NuxtLink to="/main">
-            <Button variant="destructive" size="lg" class="shadow"
-              >Pagina Principal</Button
-            >
-          </NuxtLink>
-        </div>
-        <div style="margin-left: 10px">
-          <NuxtLink to="">
-            <Button
-              variant="destructive"
-              size="lg"
-              class="shadow"
-              @click="execute"
-              >Actualizar</Button
-            >
-          </NuxtLink>
-        </div>
 
-        <div style="margin-left: 10px">
-          <NuxtLink to="sorteo">
-            <Button
-              variant="destructive"
-              size="lg"
-              class="shadow"
-              @click="execute"
-              >Seleccionar ganador</Button
-            >
-          </NuxtLink>
-        </div>
+    <!-- FORMULARIO -->
 
-        <div></div>
-      </div>
+    <div class="flex justify-center mt-20">
+      <!-- <form @submit="onSubmit"> -->
+      <Card class="w-full sm:max-w-md">
+        <CardContent>
+          <form id="form-vee-demo" @submit="onSubmit">
+            <FieldGroup>
+              <VeeField v-slot="{ field, errors }" name="email">
+                <Field :data-invalid="!!errors.length">
+                  <FieldLabel for="form-vee-demo-title"> Correo </FieldLabel>
+                  <Input
+                    id="form-vee-demo-title"
+                    type="email"
+                    v-bind="field"
+                    placeholder="Ingresa tu correo"
+                    autocomplete="off"
+                    :aria-invalid="!!errors.length"
+                  />
+                  <FieldError v-if="errors.length" :errors="errors" />
+                </Field>
+              </VeeField>
+
+              <VeeField v-slot="{ field, errors }" name="password">
+                <Field :data-invalid="!!errors.length">
+                  <FieldLabel for="form-vee-demo-title">
+                    Contraseña
+                  </FieldLabel>
+                  <Input
+                    type="password"
+                    id="form-vee-demo-title"
+                    v-bind="field"
+                    placeholder="Ingresa tu contraseña "
+                    autocomplete="off"
+                    :aria-invalid="!!errors.length"
+                  />
+                  <FieldError v-if="errors.length" :errors="errors" />
+                </Field>
+              </VeeField>
+            </FieldGroup>
+          </form>
+        </CardContent>
+
+        <div class="flex justify-center">
+          <CardFooter>
+            <Field orientation="horizontal">
+              <Button type="button" variant="outline" @click="resetForm">
+                Borrar campos
+              </Button>
+              <Button type="submit" form="form-vee-demo"> Login</Button>
+              <!--  -->
+            </Field>
+          </CardFooter>
+        </div>
+      </Card>
+      <!-- </form> -->
     </div>
+
+    <!-- END FORMULARIO -->
   </div>
 </template>

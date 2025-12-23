@@ -7,8 +7,11 @@ class Usuario(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50, default="")
     edad = models.IntegerField(default=0)
-    email = models.CharField(max_length=100, default="")
+    email = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=20, default="")
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return self.nombre
