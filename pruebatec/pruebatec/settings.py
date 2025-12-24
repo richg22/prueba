@@ -11,10 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOST", default="localhost,127.0.0.1").split(",")
 
@@ -111,14 +111,14 @@ USE_I18N = True
 USE_TZ = True
 
 # JWT
-# REST_FRAMEWORK = {
-#     "DEFAULT_AUTHENTICATION_CLASSES": (
-#         "rest_framework_simplejwt.authentication.JWTAuthentication",
-#     ),
-#     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-# }
+REST_FRAMEWORK = {
+     "DEFAULT_AUTHENTICATION_CLASSES": (
+         "rest_framework_simplejwt.authentication.JWTAuthentication",
+     ),
+     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+}
 
-# AUTH_USER_MODEL = "cruds.Usuario"
+AUTH_USER_MODEL = "cruds.Usuario"
 
 
 # Static files (CSS, JavaScript, Images)

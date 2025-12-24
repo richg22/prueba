@@ -43,32 +43,38 @@ const { handleSubmit, resetForm } = useForm({
   },
 });
 
-const onSubmit = handleSubmit((data) => {
-  toast("You submitted the following values:", {
-    description: h(
-      "pre",
+type TokenPair = {
+  access: string;
+  refresh: string;
+};
+
+const onSubmit = handleSubmit(async (data) => {
+  try {
+    const tokens = await $fetch<TokenPair>(
+      "http://localhost:8000/api/auth/token/",
       {
-        class:
-          "bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4",
-      },
-      h("code", JSON.stringify(data, null, 2))
-    ),
-    position: "bottom-right",
-    class: "flex flex-col gap-2",
-    style: {
-      "--border-radius": "calc(var(--radius)  + 4px)",
-    },
-  });
+        method: "POST",
+        body: {
+          email: data.email,
+          password: data.password,
+        },
+      }
+    );
 
-  const { data: usuarios } = useFetch<UserPending>(
-    "http://localhost:8000/api/auth/token",
-    {
-      method: "POST",
-      body: { email: data.email, password: data.password },
-    }
-  );
+    localStorage.setItem("access", tokens.access);
+    localStorage.setItem("refresh", tokens.refresh);
+
+    toast("Login exitoso", {
+      description: "Sesión iniciada correctamente",
+    });
+
+    await navigateTo("/main");
+  } catch (error) {
+    toast("Error al iniciar sesión", {
+      description: "Correo o contraseña incorrectos",
+    });
+  }
 });
-
 //https://www.shadcn-vue.com/docs/forms/vee-validate
 </script>
 

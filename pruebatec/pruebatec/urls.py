@@ -26,6 +26,6 @@ urlpatterns = [
     path("", include("cruds.urls")),
     path("usuariospending", include("cruds.urls")),
     path("enviarcorreo", views.send_example_email, name="enviarcorreo"),
-    #     path("api/auth/token/", TokenObtainPairView.as_view()),
-    #     path("api/auth/token/refresh/", TokenRefreshView.as_view()),
+    path("api/auth/token/", TokenObtainPairView.as_view()),
+    path("api/auth/token/refresh/", TokenRefreshView.as_view()),
 ]

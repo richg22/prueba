@@ -12,7 +12,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UsuarioSerializers
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -43,6 +43,7 @@ class UsuarioPendingViewSet(viewsets.ModelViewSet):
     queryset = Usuariopending.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UsuarioPendingSerializers
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
